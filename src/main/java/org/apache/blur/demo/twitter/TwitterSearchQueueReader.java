@@ -66,7 +66,6 @@ public class TwitterSearchQueueReader extends QueueReader {
     tableName = _tableContext.getTable();
 
     if (searchCriteria == null) {
-      log.error("Search criteria was null.");
       throw new RuntimeException("Twitter search criteria cannot be null.");
     }
     log.info("Initialized with search criteria[" + searchCriteria + "]");

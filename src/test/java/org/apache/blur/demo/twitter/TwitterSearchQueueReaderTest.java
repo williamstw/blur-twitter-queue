@@ -20,7 +20,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +45,6 @@ public class TwitterSearchQueueReaderTest {
   private static final File TMPDIR = new File("./target/tmp");
 
   private BlurIndexSimpleWriter _writer;
-  private Random random = new Random();
   private ExecutorService _service;
   private File _base;
   private Configuration _configuration;
@@ -64,7 +62,6 @@ public class TwitterSearchQueueReaderTest {
     _base.mkdirs();
 
     _mergeScheduler = new SharedMergeScheduler(1);
-
     _configuration = new Configuration();
     _service = Executors.newThreadPool("test", 10);
     _closer = new BlurIndexCloser();
@@ -81,7 +78,7 @@ public class TwitterSearchQueueReaderTest {
      */
 
     uuid = UUID.randomUUID().toString();
-
+    
     tableDescriptor.setTableUri(new File(_base, "table-store-" + uuid).toURI().toString());
     tableDescriptor.putToTableProperties(BlurConstants.BLUR_SHARD_INDEX_QUEUE_READER_CLASS,
         TwitterSearchQueueReader.class.getName());
