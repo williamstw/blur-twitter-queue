@@ -1,4 +1,5 @@
 package org.apache.blur.demo.twitter;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -39,8 +40,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
 public class TwitterSearchQueueReaderTest {
   private static final int TOTAL_TWEETS_FOR_TESTS = 100;
   private static final String TEST_TABLE = "tweets-table";
@@ -59,7 +58,7 @@ public class TwitterSearchQueueReaderTest {
 
   @Before
   public void setup() throws IOException {
-    //TableContext.clear();
+    // TableContext.clear();
     _base = new File(TMPDIR, TwitterSearchQueueReaderTest.class.getSimpleName());
     rmr(_base);
     _base.mkdirs();
@@ -88,7 +87,7 @@ public class TwitterSearchQueueReaderTest {
         TwitterSearchQueueReader.class.getName());
     tableDescriptor.putToTableProperties(TwitterSearchQueueReader.TWITTER_SEARCH_CRITERIA_KEY, "Apache");
     TableContext tableContext = TableContext.create(tableDescriptor);
-    
+
     File path = new File(_base, "index_" + uuid);
     path.mkdirs();
     FSDirectory directory = FSDirectory.open(path);
@@ -126,13 +125,12 @@ public class TwitterSearchQueueReaderTest {
       if (_writer.getIndexSearcher().getIndexReader().numDocs() >= TOTAL_TWEETS_FOR_TESTS) {
         break;
       }
-      if((System.currentTimeMillis()-start) > maxWait) {
-       fail("Took too long to get tweets, somethings wrong.");
+      if ((System.currentTimeMillis() - start) > maxWait) {
+        fail("Took too long to get tweets, somethings wrong.");
       }
       Thread.sleep(100);
     }
-   
-  }
 
+  }
 
 }

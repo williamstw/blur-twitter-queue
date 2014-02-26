@@ -17,7 +17,6 @@ package org.apache.blur.demo.twitter;
  * limitations under the License.
  */
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.blur.log.Log;
@@ -45,9 +44,9 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterSearchQueueReader extends QueueReader {
   private static Log log = LogFactory.getLog(TwitterSearchQueueReader.class);
-  
+
   public static final String TWITTER_SEARCH_CRITERIA_KEY = "twitter.search.criteria";
-  
+
   private Twitter twitter;
   private String searchCriteria;
   private Query query;
@@ -65,7 +64,7 @@ public class TwitterSearchQueueReader extends QueueReader {
     }
     searchCriteria = _tableContext.getDescriptor().getTableProperties().get(TWITTER_SEARCH_CRITERIA_KEY);
     tableName = _tableContext.getTable();
-    
+
     if (searchCriteria == null) {
       log.error("Search criteria was null.");
       throw new RuntimeException("Twitter search criteria cannot be null.");
@@ -83,7 +82,7 @@ public class TwitterSearchQueueReader extends QueueReader {
 
       List<Status> tweets = result.getTweets();
       List<RowMutation> mutations = new ArrayList<RowMutation>();
-      
+
       for (Status tweet : tweets) {
         mutations.add(toRowMutation(tweet));
       }
@@ -92,7 +91,7 @@ public class TwitterSearchQueueReader extends QueueReader {
     } catch (Exception te) {
       throw new RuntimeException("Error retrieving tweets.", te);
     }
-    
+
   }
 
   private RowMutation toRowMutation(Status tweet) {
@@ -103,20 +102,20 @@ public class TwitterSearchQueueReader extends QueueReader {
     Record record = new Record();
     record.setFamily("tweets");
     record.setRecordId(tweet.getUser().getScreenName() + "-" + tweet.getId());
-    
+
     record.addToColumns(new Column("message", tweet.getText()));
-    
-    for(UserMentionEntity mention: tweet.getUserMentionEntities()) {
+
+    for (UserMentionEntity mention : tweet.getUserMentionEntities()) {
       record.addToColumns(new Column("mentions", mention.getScreenName()));
     }
-    
-    for(HashtagEntity tag: tweet.getHashtagEntities()) {
+
+    for (HashtagEntity tag : tweet.getHashtagEntities()) {
       record.addToColumns(new Column("hashtags", tag.getText()));
     }
     rowMutation.addToRecordMutations(new RecordMutation(RecordMutationType.REPLACE_ENTIRE_RECORD, record));
-    
+
     log.trace(rowMutation);
-    
+
     return rowMutation;
   }
 
